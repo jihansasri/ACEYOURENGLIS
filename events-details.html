@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+        <title>Quiz Details</title>
+        <meta content="" name="description" />
+        <meta content="" name="keywords" />
+
+        <!-- Favicons -->
+        <link href="assets/img/favicon.png" rel="icon" />
+        <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon" />
+
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet" />
+
+        <!-- Vendor CSS Files -->
+        <link href="assets/vendor/animate.css/animate.min.css" rel="stylesheet" />
+        <link href="assets/vendor/aos/aos.css" rel="stylesheet" />
+        <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
+        <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet" />
+        <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet" />
+        <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet" />
+
+        <!-- Template Main CSS File -->
+        <link href="style.css" rel="stylesheet" />
+
+        <!-- Add this CSS to change the background color -->
+        <style>
+            body {
+                background-color: #fae6fd;
+            }
+        </style>
+    </head>
+
+    <body>
+        <!-- ======= Header ======= -->
+        <header id="header" class="fixed-top">
+            <div class="container d-flex align-items-center">
+                <h1 class="logo me-auto"><a href="index.html">AceYourEnglish</a></h1>
+                <nav id="navbar" class="navbar order-last order-lg-0">
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a class="active" href="courses.html">Courses</a></li>
+                        <li><a href="events.html">Quiz</a></li>
+                        <li><a href="trainers.html">Mentor</a></li>
+                        <li id="profile-menu" style="display: none"><a href="profile.html">Profile</a></li>
+                    </ul>
+                </nav>
+                <!-- .navbar -->
+
+                <a id="login-btn" href="login.html" class="get-started-btn">Login</a>
+                <button id="logout-btn" class="get-started-btn" style="display: none">Logout</button>
+            </div>
+        </header>
+        <!-- End Header -->
+
+        <main id="main">
+            <div id="listQuestion"></div>
+        </main>
+        <!-- End #main -->
+
+        <!-- ======= Footer ======= -->
+        <footer id="footer">
+            <div class="footer-top">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6 footer-contact">
+                            <h3>Ace Your English</h3>
+                        </div>
+
+                        <div class="col-lg-2 col-md-6 footer-links">
+                            <h4>Useful Links</h4>
+                            <ul>
+                                <li><i class="bx bx-chevron-right"></i> <a href="index.html">Home</a></li>
+                                <li><i class="bx bx-chevron-right"></i> <a href="courses.html">Courses</a></li>
+                                <li><i class="bx bx-chevron-right"></i> <a href="events.html">Quiz</a></li>
+                                <li><i class="bx bx-chevron-right"></i> <a href="mentor.html">Mentor</a></li>
+                                <li><i class="bx bx-chevron-right"></i> <a href="about.html">Profile</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container d-md-flex py-4">
+                <div class="me-md-auto text-center text-md-start">
+                    <div class="copyright">
+                        &copy; Copyright <strong><span>AceYourEnglish</span></strong
+                        >. All Rights Reserved
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- End Footer -->
+
+        <div id="preloader"></div>
+        <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+        <!-- Vendor JS Files -->
+        <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+        <script src="assets/vendor/aos/aos.js"></script>
+        <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+        <script src="assets/vendor/php-email-form/validate.js"></script>
+
+        <!-- Template Main JS File -->
+        <script src="assets/js/main.js"></script>
+        <script src="assets/js/jquery.js"></script>
+        <script src="middleware/is-login.js"></script>
+        <script>
+            $(document).ready(function () {
+                const authToken = localStorage.getItem('auth_token');
+                const urlParams = new URLSearchParams(window.location.search);
+                const quiId = urlParams.get('id');
+
+                function showQuizResult(questionNumber, correctAnswer, resultElement) {
+                    const selectedAnswer = document.querySelector(`input[name="answer"]:checked`);
+
+                    if (!selectedAnswer) {
+                        resultElement.textContent = 'Pilih jawaban terlebih dahulu.';
+                    } else if (selectedAnswer.value === correctAnswer) {
+                        resultElement.textContent = 'Jawaban Anda benar!';
+                    } else {
+                        resultElement.textContent = `Jawaban Anda salah. Jawaban yang benar adalah: ${correctAnswer}`;
+                    }
+                }
+
+                $.ajax({
+                    url: 'http://127.0.0.1:8000/api/quizzes/' + quiId,
+                    type: 'GET',
+                    dataType: 'json',
+                    headers: {
+                        Authorization: `Bearer ${authToken}`,
+                    },
+                    success: function (response) {
+                        $.each(response.result.questions, function (index, question) {
+                            const questionDiv = `<div id="question-${question.id}">
+                                <div class="breadcrumbs" data-aos="fade-in">
+                                    <div class="container">
+                                        <p>${response.result.course.name}: ${response.result.name}</p>
+                                        <div class="square-with-number">${index + 1}</div>
+                                        ${question.question}
+                                    </div>
+                                </div>
+                                <section id="event-details" class="event-details">
+                                    <div class="container" data-aos="fade-up">
+                                        <div class="quiz-container">
+                                            <form id="quiz-form-${question.id}">
+                                            </form>
+                                            <div class="quiz-result">
+                                                <span id="quiz-result-${question.id}"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>`;
+
+                            $('#listQuestion').append(questionDiv);
+
+                            $.each(question.choices, function (choiceIndex, choice) {
+                                const choiceHtml = `<div class="course-info">
+                                    <input type="radio" name="question-${question.id}-answer" value="${String.fromCharCode(97 + choiceIndex)}" id="question-${question.id}-option-${String.fromCharCode(97 + choiceIndex)}" />
+                                    <label for="question-${question.id}-option-${String.fromCharCode(97 + choiceIndex)}">${String.fromCharCode(97 + choiceIndex)}. ${choice.choice}</label>
+                                </div>`;
+
+                                $(`#quiz-form-${question.id}`).append(choiceHtml);
+                            });
+
+                            const checkButtonHtml = `
+                                <button type="button" class="check-button" data-question-id="${question.id}">Cek</button>
+                            `;
+                            $(`#quiz-form-${question.id}`).append(checkButtonHtml);
+                        });
+
+                        $('.check-button').click(function () {
+                            const questionId = $(this).data('question-id');
+                            const selectedAnswer = $(`input[name="question-${questionId}-answer"]:checked`).val();
+                            const question = response.result.questions.find((q) => q.id === questionId);
+
+                            const correctAnswerIndex = question.choices.findIndex((choice) => choice.is_correct);
+
+                            const correctAnswer = String.fromCharCode(97 + correctAnswerIndex);
+
+                            const resultElement = $(`#quiz-result-${questionId}`);
+
+                            if (!selectedAnswer) {
+                                resultElement.text('Pilih jawaban terlebih dahulu.');
+                            } else if (selectedAnswer === correctAnswer) {
+                                resultElement.text('Jawaban Anda benar!');
+                            } else {
+                                resultElement.text(`Jawaban Anda salah. Jawaban yang benar adalah: ${correctAnswer}`);
+                            }
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        const code = xhr.status;
+
+                        if (code === 401 || code === 500) {
+                            localStorage.removeItem('auth_token');
+                            window.location.href = './login.html';
+                        }
+                    },
+                });
+            });
+        </script>
+    </body>
+</html>

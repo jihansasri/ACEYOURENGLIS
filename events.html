@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+        <title>Quiz</title>
+        <meta content="" name="description" />
+        <meta content="" name="keywords" />
+
+        <!-- Favicons -->
+        <link href="assets/img/favicon.png" rel="icon" />
+        <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon" />
+
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet" />
+
+        <!-- Vendor CSS Files -->
+        <link href="assets/vendor/animate.css/animate.min.css" rel="stylesheet" />
+        <link href="assets/vendor/aos/aos.css" rel="stylesheet" />
+        <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
+        <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet" />
+        <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet" />
+        <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet" />
+
+        <!-- Template Main CSS File -->
+        <link href="style.css" rel="stylesheet" />
+
+        <!-- Add this CSS to change the background color -->
+        <style>
+            body {
+                background-color: #fae6fd;
+            }
+        </style>
+    </head>
+
+    <body>
+        <!-- ======= Header ======= -->
+        <header id="header" class="fixed-top">
+            <div class="container d-flex align-items-center">
+                <h1 class="logo me-auto"><a href="index.html">AceYourEnglish</a></h1>
+                <nav id="navbar" class="navbar order-last order-lg-0">
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a class="active" href="courses.html">Courses</a></li>
+                        <li><a href="events.html">Quiz</a></li>
+                        <li><a href="trainers.html">Mentor</a></li>
+                        <li id="profile-menu" style="display: none"><a href="profile.html">Profile</a></li>
+                    </ul>
+                </nav>
+                <!-- .navbar -->
+
+                <a id="login-btn" href="login.html" class="get-started-btn">Login</a>
+                <button id="logout-btn" class="get-started-btn" style="display: none">Logout</button>
+            </div>
+        </header>
+        <!-- End Header -->
+
+        <main id="main">
+            <!-- ======= Breadcrumbs ======= -->
+            <div class="breadcrumbs" data-aos="fade-in">
+                <div class="container">
+                    <h2>Quiz</h2>
+                    <p>
+                        “Welcome to AceYourEnglish's Quiz Page! This is where you can put your English skills to the test and sharpen your language proficiency. Whether you're a beginner or an advanced learner, we have a variety of quizzes
+                        to cater to your needs. Are you ready to ace it?”
+                    </p>
+                </div>
+            </div>
+            <!-- End Breadcrumbs -->
+
+            <!-- ======= Quiz Section ======= -->
+            <section id="events" class="events">
+                <div class="container curved-container" data-aos="fade-up">
+                    <div class="row" data-aos="zoom-in" data-aos-delay="100" id="listQuiz"></div>
+                </div>
+            </section>
+            <!-- End Quiz Section -->
+        </main>
+        <!-- End #main -->
+
+        <!-- ======= Footer ======= -->
+        <footer id="footer">
+            <div class="footer-top">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6 footer-contact">
+                            <h3>Ace Your English</h3>
+                        </div>
+
+                        <div class="col-lg-2 col-md-6 footer-links">
+                            <h4>Useful Links</h4>
+                            <ul>
+                                <li><i class="bx bx-chevron-right"></i> <a href="index.html">Home</a></li>
+                                <li><i class="bx bx-chevron-right"></i> <a href="courses.html">Courses</a></li>
+                                <li><i class="bx bx-chevron-right"></i> <a href="events.html">Quiz</a></li>
+                                <li><i class="bx bx-chevron-right"></i> <a href="trainers.html">Mentor</a></li>
+                                <li><i class="bx bx-chevron-right"></i> <a href="about.html">Profile</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container d-md-flex py-4">
+                <div class="me-md-auto text-center text-md-start">
+                    <div class="copyright">
+                        &copy; Copyright <strong><span>AceYourEnglish</span></strong
+                        >. All Rights Reserved
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- End Footer -->
+
+        <div id="preloader"></div>
+        <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+        <!-- Vendor JS Files -->
+        <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+        <script src="assets/vendor/aos/aos.js"></script>
+        <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+        <script src="assets/vendor/php-email-form/validate.js"></script>
+
+        <!-- Main JS File -->
+        <script src="assets/js/main.js"></script>
+        <script src="assets/js/jquery.js"></script>
+        <script src="middleware/is-login.js"></script>
+        <script>
+            $(document).ready(function () {
+                const authToken = localStorage.getItem('auth_token');
+
+                $.ajax({
+                    type: 'GET',
+                    url: 'http://127.0.0.1:8000/api/quizzes',
+                    headers: {
+                        Authorization: `Bearer ${authToken}`,
+                    },
+                    success: function (response) {
+                        $.each(response.result, function (index, quiz) {
+                            const quizItem = `
+                                <div class="col-lg-4 col-md-6 col-sm-12 d-flex align-items-stretch">
+                                <div class="course-item">
+                                    <img src="assets/img/${quiz.image}" class="img-fluid" alt="..." />
+                                    <div class="course-content">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h4>${quiz.course.name}</h4>
+                                        </div>
+                                        <h3><a href="events-details.html?id=${quiz.id}">${quiz.name}</a></h3>
+                                        <p>${quiz.description}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            `;
+
+                            $('#listQuiz').append(quizItem);
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        const code = xhr.status;
+
+                        if (code === 401 || code === 500) {
+                            localStorage.removeItem('auth_token');
+                            window.location.href = './login.html';
+                        }
+                    },
+                });
+            });
+        </script>
+    </body>
+</html>
